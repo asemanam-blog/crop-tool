@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head><!--{{{-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4cb0cf" />
+  <title>Cropper</title>
+  <link href="http://bayanbox.ir/view/2236709331436645041/logo.svg.ico" rel="shortcut icon">
+  <link rel="icon" sizes="300x100" href="http://bayanbox.ir/download/5511823367774169635/logo.svg.png">
+  <link rel="apple-touch-icon" type="image/png" href="http://bayanbox.ir/download/5511823367774169635/logo.svg.png">
+  <link rel="mask-icon" href="http://bayanbox.ir/download/4909477435890609283/logo.svg">
+  <link rel="stylesheet" href="https://asemanam.blog.ir/static/1FeXS9w7y-s/1558509469/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <style>
+    *, :before, :after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 1024px;
+      margin: 10px auto;
+    }
+  </style>
+</head><!--}}}-->
+
+<body><!--{{{-->
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<!--{{{--> <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    #image {
+      display: block;
+      max-width: 100%;
+    }
+    
+    .btnBar {
+      margin-bottom: .8rem;
+      direction: ltr;
+      text-align: center;
+    }
+    
+    .btnBar2 {
+      margin-top: -.8rem;
+      margin-bottom: 2rem;
+    }
+
+    .btnBar button {
+      font-size: 1rem;
+    }
+
+    .btnBar button, .btnBar label {
+      margin-top: .5rem;
+    }
+
+    .btnBar button i.bx, .btnBar label i {
+      line-height: unset;
+      font-size: 1rem;
+    }
+
+    .dlResult {
+      display: block;
+      margin: .3rem 0 .5rem;
+      font-size: 1rem;
+    }
+
+    .crpInput {
+      display: none;
+    }
+
+    .btnBar button label {
+      cursor: pointer;
+    }
+
+    #result canvas {
+      max-width: 100%;
+    }
+
+    #result {
+      text-align: center;
+    }
+
+    .kaze {
+      direction: rtl;
+      text-align: center;
+      color: #0006;
+      font-size: .9rem;
+      margin-bottom: .5rem;
+    }
+
+    .bx.bx-cloud-upload {
+      font-size: 35px;
+    }
+
+    button i.bx.bx-world {
+      font-size: 25px;
+    }
+
+    #crpCurrent {
+      background: unset;
+      border: unset;
+      font-weight: 300;
+      color: #5755d994;
+      margin-left: 1rem;
+      position: relative;
+      top: .3rem;
+    }
+
+    .modal-body .content {
+      direction: rtl;
+    }
+
+    .modal-body .content input {
+      direction: ltr;
+      padding: 10px 40px 10px 30px;
+      border: 1px solid #ccc;
+      color: #777;
+      outline: unset;
+      border-right: unset;
+      border-left: unset;
+    }
+
+    .icon.icon-arrow-right {
+      position: relative;
+      top: 2px;
+      left: 1px;
+    }
+
+    #modalUrlSubmit.btn.btn-action.btn-primary.s-circle {
+      position: absolute;
+      right: -1%;
+      transition: .2s ease-in;
+      top: 5px;
+    }
+
+    .cropForm {
+      position: relative;
+    }
+
+    .inBorderErr {
+      border-color: #e85600 !important;
+    }
+
+    #modalUrlClean {
+      position: absolute;
+      left: -15px;
+      transition: .2s ease-in;
+      top: 5px;
+    }
+
+    #modalUrlClean i {
+      font-size: 20px;
+    }
+
+    #modal-close {
+      font-size: 20px;
+      position: relative;
+      top: 5px;
+      left: -12px;
+    }
+
+  </style> <!--}}}-->
+<!--{{{--> <section class="container">
+
+    <h4 class="w-100 text-center mimenu" style="color: white; background-color: #8e44ad;padding: .5em; border-radius: .5em; border-top-right-radius: 1em; border-top-left-radius: 1em; margin-bottom: 1em; direction: rtl;">
+      <a href="http://asemanam.blog.ir/post/209" target="_blank">
+        ابزار برش و تغییر اندازه تصاویر
+      </a>
+    </h4>
+
+    <div>
+      <img id="image" src="https://s28.picofile.com/file/8464511842/asemanam_blog3.png">
+    </div>
+    <!-- btnBar 1 --><!--{{{-->
+    <div class="btnBar">
+
+      <button id="crpReset" class="btn tooltip" mimr-tooltip="بازنشانی تنظیمات اولیه">
+        <i class='bx bx-refresh'></i>
+      </button>
+
+      <label for="file-selector" id="crpUpload" class="btn tooltip" mimr-tooltip="آپلود از دستگاه">
+        <i class='bx bx-cloud-upload' ></i>
+      </label> 
+      <input type="file" id="file-selector" class="crpInput" accept="image/png, image/jpeg, image/svg+xml">
+
+      <button id="crpCut" class="btn btn-primary tooltip" mimr-tooltip="پیشنمایش و دانلود">
+        <i class="icon icon-arrow-left"></i>
+        پیشنمایش
+      </button>
+
+      <button id="crpMove" class="btn tooltip" mimr-tooltip="حالت حرکت تصویر و کادر">
+        <i class='bx bx-move'></i>
+      </button>
+
+      <button id="crpCrop" class="btn tooltip" mimr-tooltip="حالت برش تصویر">
+        <i class='bx bx-crop' ></i>
+      </button>
+
+      <button id="crpZoomIn" class="btn tooltip" mimr-tooltip="بزرگنمایی">
+        <i class='bx bx-zoom-in'></i>
+      </button>
+
+      <button id="crpZoomOut" class="btn tooltip" mimr-tooltip="کوچک‌نمایی">
+        <i class='bx bx-zoom-out' ></i>
+      </button>
+
+      <button id="crpAspect11" class="btn cRatio tooltip" mimr-tooltip="نسبت برابر ۱ به ۱">
+        ۱:۱
+      </button>
+
+      <button id="crpAspect23" class="btn cRatio tooltip" mimr-tooltip="نسبت بلند ۲ به ۳">
+        ۲:۳
+      </button>
+
+      <button id="crpAspect32" class="btn cRatio tooltip" mimr-tooltip="نسبت عریض ۳ به ۲">
+        ۳:۲
+      </button>
+
+      <button id="crpAspect43" class="btn cRatio tooltip" mimr-tooltip="نسبت عریض ۴ به ۳">
+        ۴:۳
+      </button>
+
+      <button id="crpAspect169" class="btn cRatio tooltip" mimr-tooltip="نسبت عریض ۱۶ به ۹">
+        ۱۶:۹
+      </button>
+
+      <button id="crpAspectFree" class="btn cRatio tooltip" mimr-tooltip="نسبت دلخواه">
+        N:N
+      </button>
+
+      <button id="crpRotateLeft" class="btn tooltip" mimr-tooltip="چرخش ۱۵ درجه به چپ">
+        <i class='bx bx-rotate-left' ></i>
+      </button>
+
+      <button id="crpRotateRight" class="btn tooltip" mimr-tooltip="چرخش ۱۵ درجه به راست">
+        <i class='bx bx-rotate-right' ></i>
+      </button>
+
+    </div>
+<!--}}}-->
+    <!-- btnBar 2--><!--{{{-->
+    <div class="btnBar btnBar2">
+
+      <button id="crpUrl" class="btn tooltip tooltip-bottom" mimr-tooltip="بارگذاری تصویر با نشانی آنلاین">
+        <i class='bx bx-world'></i>
+      </button>
+
+      <button id="crpMaxFree" class="btn btn-primary cMax tooltip tooltip-bottom" value="0" mimr-tooltip="تصویر اصلی - بدون محدودیت ابعاد">
+        حد آزاد
+      </button>
+
+      <button id="crpMax2000" class="btn cMax tooltip tooltip-bottom" value="2000" mimr-tooltip="محدودیت یک بعد ۲۰۰۰ پیکسل">
+        حد ۲۰۰۰ 
+      </button>
+
+      <button id="crpMax1500" class="btn cMax tooltip tooltip-bottom" value="1500" mimr-tooltip="محدودیت یک بعد ۱۵۰۰ پیکسل">
+        حد ۱۵۰۰ 
+      </button>
+
+      <button id="crpMax1000" class="btn cMax tooltip tooltip-bottom" value="1000" mimr-tooltip="محدودیت یک بعد ۱۰۰۰ پیکسل">
+        حد ۱۰۰۰
+      </button>
+
+      <button id="crpMax500" class="btn cMax tooltip tooltip-bottom" value="500" mimr-tooltip="محدودیت یک بعد ۵۰۰ پیکسل">
+        حداکثر ۵۰۰ پیکسل
+      </button>
+
+      <button id="crpCurrent" class=" tooltip tooltip-bottom" mimr-tooltip="ابعاد کنونی تصویر در کادر برش"></button>
+
+    </div>
+<!--}}}-->
+    <!-- modal --><!--{{{-->
+    <div class="modal" id="modal-Url">
+      <a class="modal-overlay" aria-label="Close"></a>
+      <div class="modal-container">
+        <div class="modal-header">
+          <a id="modal-close" class="btn btn-clear float-left tooltip" aria-label="Close" mimr-tooltip="بستن"></a>
+          <div class="modal-title h5 float-right">آدرس تصویر خود را وارد کنید</div>
+        </div>
+        <div class="modal-body">
+          <div class="content">
+            <p>
+            <div class="cropForm">
+              <input class="w-100" type="text" id="modalUrl" placeholder="https://bayanbox.ir/image.jpg | jpeg | png | svg" required>
+              <button id="modalUrlSubmit" class="btn btn-lg btn-action btn-primary s-circle tooltip" mimr-tooltip="ارسال"><i class="icon icon-arrow-right"></i></button>
+              <button id="modalUrlClean" class="btn btn-lg btn-action s-circle tooltip tooltip-right" mimr-tooltip="پاک کردن" ><i class='bx bx-recycle'></i></button>
+
+            </div>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- modal --><!--}}}-->
+    <div id="result"></div>
+
+  </section><!--}}}-->
+
+  <script src="https://bayanbox.ir/download/7442292215437977975/cropper.min.js.js"></script>
+<!--{{{--> <script>
+
+    const image = document.getElementById('image');
+    const cropper = new Cropper(image, {
+      viewMode: 1,
+      dragMode: 'none',
+      crop(event) {
+          const cropCurrent = document.getElementById('crpCurrent');
+          cropCurrent.textContent = Math.round(event.detail.width) + "px × " + Math.round(event.detail.height) + "px";
+        },
+    });
+
+    const result = document.getElementById('result');
+    const remax = document.querySelectorAll('.cMax');
+
+  //preview button{{{
+    const cutResultBtn = document.getElementById("crpCut");
+    cutResultBtn.addEventListener('click', () => {
+      let i = 0;
+      for(; i < remax.length; i++) {
+        if(remax[i].classList.contains('btn-primary')) {
+          if(remax[i].value == "0") {
+            result.replaceChildren(cropper.getCroppedCanvas());
+          } else if(remax[i].value == "500") {
+            result.replaceChildren(cropper.getCroppedCanvas({maxWidth: 500, maxHeight: 500, minWidth: 500, minHeight: 500, imageSmoothingQuality: 'high'}));
+          } else if(remax[i].value == "1000") {
+            result.replaceChildren(cropper.getCroppedCanvas({maxWidth: 1000, maxHeight: 1000, minWidth: 1000, minHeight: 1000, imageSmoothingQuality: 'high'}));
+          } else if(remax[i].value == "1500") {
+            result.replaceChildren(cropper.getCroppedCanvas({maxWidth: 1500, maxHeight: 1500, minWidth: 1500, minHeight: 1500, imageSmoothingQuality: 'high'}));
+          } else if(remax[i].value == "2000") {
+            result.replaceChildren(cropper.getCroppedCanvas({maxWidth: 2000, maxHeight: 2000, minWidth: 2000, minHeight: 2000, imageSmoothingQuality: 'high'}));
+          } else {
+            result.replaceChildren(cropper.getCroppedCanvas());
+          }
+        }
+      }
+
+      sekai = document.createElement('a');
+      sekai.setAttribute('class', 'dlResult btn btn-success');
+      sekai.setAttribute('download', 'rename.jpg');
+      sekai.textContent = "دانلود";
+      sekai.setAttribute('href', document.getElementsByTagName('canvas')[0].toDataURL("image/jpeg", 1.0));
+
+      let croppedSize = [];
+      croppedSize[0] = document.getElementsByTagName('canvas')[0].getAttribute('width');
+      croppedSize[1] = document.getElementsByTagName('canvas')[0].getAttribute('height');
+      kaze = document.createElement('p');
+      kaze.textContent = "ابعاد تصویر: " + croppedSize[1] + "px × " + croppedSize[0] + "px";
+      kaze.setAttribute('class', 'kaze');
+
+      result.appendChild(kaze);
+      result.appendChild(sekai);
+      result.scrollIntoView();
+    })
+    //}}}
+    const moveBtn = document.getElementById("crpMove");
+    moveBtn.addEventListener('click', () => {
+      cropper.setDragMode("move");
+    });
+
+    const cropBtn = document.getElementById("crpCrop");
+    cropBtn.addEventListener('click', () => {
+      cropper.setDragMode("crop");
+    });
+
+    const cropZoomIn = document.getElementById("crpZoomIn");
+    cropZoomIn.addEventListener('click', () => {
+      cropper.zoom(0.1);
+    });
+
+    const cropZoomOut = document.getElementById("crpZoomOut");
+    cropZoomOut.addEventListener('click', () => {
+      cropper.zoom(-0.1);
+    });
+
+    const cropRotateLeft = document.getElementById("crpRotateLeft");
+    cropRotateLeft.addEventListener('click', () => {
+      cropper.rotate(-15);
+    });
+
+    const cropRotateRight = document.getElementById("crpRotateRight");
+    cropRotateRight.addEventListener('click', () => {
+      cropper.rotate(15);
+    });
+
+    function modalToggle() {
+      document.getElementById('modal-Url').classList.toggle('active');
+    }
+
+    // URL and modal{{{
+    const cropUrl = document.getElementById("crpUrl");
+    cropUrl.addEventListener('click', () => {
+      modalToggle();
+      document.getElementById('modalUrl').focus();
+    });
+
+    const cropModalClose = document.getElementById("modal-close");
+    cropModalClose.addEventListener('click', () => {
+      modalToggle();
+    });
+
+    const cropModalInput = document.getElementById('modalUrl');
+    cropModalInput.addEventListener('keyup', (e) => {
+      e.preventDefault();
+      if (e.key === 'Enter' || e.keyCode === 13) {
+        let url = cropModalInput.value;
+        const urlRegex = /(https?:\/\/.*\.(?:png|jpg|jpeg|svg))/i;
+        const urlRegexSites = /(https?:\/\/.*\.(?:unsplash)\.*)/i;
+        var urlDetect = url.match(urlRegex);
+        var urlDetectSites = url.match(urlRegexSites);
+        if(urlDetect) {
+          cropper.replace(urlDetect[0]);
+          result.innerHTML = '';
+          cropModalInput.classList.remove('inBorderErr');
+          modalToggle();
+        } else if(urlDetectSites) {
+          cropper.replace(urlDetectSites[0]);
+          result.innerHTML = '';
+          cropModalInput.classList.remove('inBorderErr');
+          modalToggle();
+        } else {
+          cropModalInput.focus();
+          cropModalInput.classList.add('inBorderErr');
+        }
+      }
+    });
+
+    const cropModalUrlSubmit = document.getElementById('modalUrlSubmit');
+    cropModalUrlSubmit.addEventListener('click', () => {
+        let url = cropModalInput.value;
+        const urlRegex = /(https?:\/\/.*\.(?:png|jpg|jpeg|svg))/i;
+        const urlRegexSites = /(https?:\/\/.*\.(?:unsplash)\.*)/i;
+        var urlDetect = url.match(urlRegex);
+        var urlDetectSites = url.match(urlRegexSites);
+        if(urlDetect) {
+          cropper.replace(urlDetect[0]);
+          result.innerHTML = '';
+          cropModalInput.classList.remove('inBorderErr');
+          modalToggle();
+        } else if(urlDetectSites) {
+          cropper.replace(urlDetectSites[0]);
+          result.innerHTML = '';
+          cropModalInput.classList.remove('inBorderErr');
+          modalToggle();
+        } else {
+          cropModalInput.focus();
+          cropModalInput.classList.add('inBorderErr');
+        }
+    });
+
+    const cropModalClean = document.getElementById("modalUrlClean");
+    cropModalClean.addEventListener('click', () => {
+      cropModalInput.value = "";
+      cropModalInput.focus();
+    });
+
+    // URL and modal}}}
+
+    //Ratio {{{
+    const allRatio = document.querySelectorAll('.cRatio');
+    function clearRatioPrimary () {
+      let i = 0;
+      for(; i < allRatio.length; i++) {
+        if(allRatio[i].classList.contains('btn-primary'))
+          allRatio[i].classList.toggle('btn-primary');
+      }
+    }
+
+    const cropAspect11 = document.getElementById("crpAspect11");
+    cropAspect11.addEventListener('click', () => {
+      cropper.setAspectRatio(1 / 1);
+      clearRatioPrimary ();
+      cropAspect11.classList.toggle('btn-primary');
+    });
+
+    const cropAspect23 = document.getElementById("crpAspect23");
+    cropAspect23.addEventListener('click', () => {
+      cropper.setAspectRatio(2 / 3);
+      clearRatioPrimary ();
+      cropAspect23.classList.toggle('btn-primary');
+    });
+
+    const cropAspect32 = document.getElementById("crpAspect32");
+    cropAspect32.addEventListener('click', () => {
+      cropper.setAspectRatio(3 / 2);
+      clearRatioPrimary ();
+      cropAspect32.classList.toggle('btn-primary');
+    });
+
+    const cropAspect43 = document.getElementById("crpAspect43");
+    cropAspect43.addEventListener('click', () => {
+      cropper.setAspectRatio(4 / 3);
+      clearRatioPrimary ();
+      cropAspect43.classList.toggle('btn-primary');
+    });
+
+    const cropAspect169 = document.getElementById("crpAspect169");
+    cropAspect169.addEventListener('click', () => {
+      cropper.setAspectRatio(16 / 9);
+      clearRatioPrimary ();
+      cropAspect169.classList.toggle('btn-primary');
+    });
+
+    const cropAspectFree = document.getElementById("crpAspectFree");
+    cropAspectFree.addEventListener('click', () => {
+      cropper.setAspectRatio(null);
+      clearRatioPrimary ();
+      cropAspectFree.classList.toggle('btn-primary');
+    });
+    //Ratio }}}
+    //max size {{{
+    const allcmax = document.querySelectorAll('.cMax');
+    function clearMaxPrimary () {
+      let i = 0;
+      for(; i < allcmax.length; i++) {
+        if(allcmax[i].classList.contains('btn-primary'))
+          allcmax[i].classList.toggle('btn-primary');
+      }
+    }
+
+    const cropMaxFree = document.getElementById("crpMaxFree");
+    cropMaxFree.addEventListener('click', () => {
+      clearMaxPrimary();
+      cropMaxFree.classList.toggle('btn-primary');
+      result.innerHTML = '';
+    });
+
+    const cropMax500 = document.getElementById("crpMax500");
+    cropMax500.addEventListener('click', () => {
+      clearMaxPrimary();
+      cropMax500.classList.toggle('btn-primary');
+      result.innerHTML = '';
+    });
+
+    const cropMax1000 = document.getElementById("crpMax1000");
+    cropMax1000.addEventListener('click', () => {
+      clearMaxPrimary();
+      cropMax1000.classList.toggle('btn-primary');
+      result.innerHTML = '';
+    });
+
+    const cropMax1500 = document.getElementById("crpMax1500");
+    cropMax1500.addEventListener('click', () => {
+      clearMaxPrimary();
+      cropMax1500.classList.toggle('btn-primary');
+      result.innerHTML = '';
+    });
+
+    const cropMax2000 = document.getElementById("crpMax2000");
+    cropMax2000.addEventListener('click', () => {
+      clearMaxPrimary();
+      cropMax2000.classList.toggle('btn-primary');
+      result.innerHTML = '';
+    });
+
+    // }}}
+
+    const cropReset = document.getElementById("crpReset");
+    cropReset.addEventListener('click', () => {
+      cropper.reset();
+      result.innerHTML = '';
+      clearRatioPrimary ();
+      clearMaxPrimary();
+      document.getElementById("crpMaxFree").classList.toggle('btn-primary');
+      cropper.setAspectRatio(null);
+    });
+
+    const cropFileSelector = document.getElementById('file-selector');
+    cropFileSelector.addEventListener('change', (e) => {
+      const miFile = e.target.files[0];
+      let objectURL = URL.createObjectURL(miFile);
+      cropper.replace(objectURL);
+      result.innerHTML = '';
+    });
+
+  </script><!-- }}} -->
+
+</body><!--}}}-->
+
+</html>
